@@ -10,4 +10,10 @@ if ($profileExists -and !$force ) {
   }
 }
 
+$dir = Split-Path $PROFILE -Parent
+
+if (!(Test-Path $dir)) {
+  md $dir | Out-Null
+}
+
 Get-Content $PSScriptRoot\profile.ps1 | Set-Content -path $PROFILE
