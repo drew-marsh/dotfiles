@@ -1,5 +1,9 @@
-$t = Measure-Command {
+$cmd = @"
+`$t = measure-command {
   . $PSScriptRoot\profile.ps1
-}
+  }
+"`$([Math]::Round(`$t.totalMilliseconds)) ms"
+"@
 
-Write-Output "ms: $($t.TotalMilliseconds)"
+# profile needs interactive session
+powershell.exe -NoLogo -NoProfile -Command $cmd
