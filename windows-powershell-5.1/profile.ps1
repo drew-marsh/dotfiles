@@ -1,3 +1,4 @@
+Clear-Host
 $IsElevated = (New-Object Security.Principal.WindowsPrincipal ([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 # todo - write own git wrapper to get rid of dependency
 import-module posh-git
@@ -9,10 +10,10 @@ function prompt {
     Write-Host "E " -NoNewline -ForegroundColor Red
   }
 
-  Write-Host "$env:USERNAME@$env:COMPUTERNAME" -ForegroundColor Green -NoNewline
-  Write-Host " $PWD" -NoNewline
+  Write-Host "$env:USERNAME@$env:COMPUTERNAME" -ForegroundColor Cyan -NoNewline
   # from posh-git
   Write-VcsStatus | Write-Host -NoNewline
+  Write-Host " $($PWD.Path | Split-Path -Leaf)" -NoNewline
   return "> "
 }
 
@@ -21,9 +22,11 @@ function prompt {
 
 # must be imported manually
 # autoimport does not work because module must be used before cmdlet is called
-# relies on module being installed in setup script
-# 500ms :/
-Import-Module PSCompletions | Out-Null
+# slow
+try {
+  Import-Module PSCompletions | Out-Null
+}
+catch { Write-Output "Error importing PSCompletions module" }
 
 function Add-Completion {
   param($executable)
