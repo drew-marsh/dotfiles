@@ -22,26 +22,26 @@ function Write-Branch {
   }
 
   if ($gs.UpstreamGone -eq $true) {
-    Write-Host "$Ex$branch" -NoNewline -ForegroundColor $BehindColor
+    Write-Host "$branch $Ex" -NoNewline -ForegroundColor $BehindColor
     return
   }
 
   if (($gs.BehindBy -eq 0) -and ($gs.AheadBy -eq 0)) {
-    Write-Host "$branch$TripEq" -NoNewline -ForegroundColor $NeutralColor
+    Write-Host "$branch $TripEq" -NoNewline -ForegroundColor $NeutralColor
     return
   }
 
   if (($gs.BehindBy -ge 1) -and ($gs.AheadBy -ge 1)) {
-    Write-Host "$UpDown$branch" -NoNewline -ForegroundColor $AheadBehindColor
+    Write-Host "$branch $UpDown" -NoNewline -ForegroundColor $AheadBehindColor
   }
 
   if (($gs.BehindBy -ge 1)) {
-    Write-Host "$Down$branch" -NoNewline -ForegroundColor $BehindColor
+    Write-Host "$branch $Down" -NoNewline -ForegroundColor $BehindColor
     return
   }
 
   if (($gs.AheadBy -ge 1)) {
-    Write-Host "$Up$branch" -NoNewline -ForegroundColor $AheadColor
+    Write-Host "$branch $Up" -NoNewline -ForegroundColor $AheadColor
     return
   }
 
