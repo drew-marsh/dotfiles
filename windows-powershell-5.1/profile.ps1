@@ -1,18 +1,94 @@
 Clear-Host
-$IsElevated = (New-Object Security.Principal.WindowsPrincipal ([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
-# todo - write own git wrapper to get rid of dependency
-import-module posh-git
 
-function prompt {
-  Write-Host "PS " -NoNewline -ForegroundColor Blue
+Import-Module posh-git
 
-  if ($IsElevated) {
-    Write-Host "E " -NoNewline -ForegroundColor Red
+$Up = [char]0x2191 
+$Down = [char]0x2193
+$UpDown = [char]0x2195
+$TripEq = [char]0x2261
+$Ex = [char]0x00D7
+
+$AheadColor = 'Green'
+$BehindColor = 'Red'
+$NeutralColor = 'Cyan'
+$AheadBehindColor = 'Yellow'
+
+function Write-Branch {
+  param([Parameter(ValueFromPipeline = $true)]
+    $gs
+  )
+
+  $branch = $gs.Branch
+
+  if (!$gs.Upstream) {
+    Write-Host $branch -NoNewline -ForegroundColor $AheadColor
+    return
   }
 
-  Write-Host "$env:USERNAME@$env:COMPUTERNAME" -ForegroundColor Cyan -NoNewline
+  if ($gs.UpstreamGone -eq $true) {
+    Write-Host "$Ex $branch" -NoNewline -ForegroundColor $BehindColor
+    return
+  }
+
+  if (($gs.BehindBy -eq 0) -and ($gs.AheadBy -eq 0)) {
+    Write-Host "$branch$TripEq" -NoNewline -ForegroundColor $NeutralColor
+    return
+  }
+
+  if (($gs.BehindBy -ge 1) -and ($gs.AheadBy -ge 1)) {
+    Write-Host "$UpDown $branch" -NoNewline -ForegroundColor $AheadBehindColor
+  }
+
+  if (($gs.BehindBy -ge 1)) {
+    Write-Host "$Down $branch" -NoNewline -ForegroundColor $BehindColor
+    return
+  }
+
+  if (($gs.AheadBy -ge 1)) {
+    Write-Host "$Up $branch" -NoNewline -ForegroundColor $AheadColor
+    return
+  }
+
+}
+
+function Write-CommitStatus {
+  param([Parameter(ValueFromPipeline = $true)]$gs)
+
+  if ($gs.HasIndex) {
+    Write-Host -ForegroundColor Green -NoNewline "+"
+  }
+  if ($gs.HasWorking) {
+    Write-Host -ForegroundColor Red -NoNewline "*"
+  }
+  if ($gs.HasUntracked) {
+    Write-Host -ForegroundColor Red -NoNewline "!"
+  }
+}
+
+function Write-GitStatus {
+  param([Parameter(ValueFromPipeline = $true)]$gs)
+
+  if (!$gs) {
+    return
+  }
+
+  Write-Host " " -NoNewline
+  $gs | Write-Branch
+  $gs | Write-CommitStatus
+}
+
+$IsElevated = (New-Object Security.Principal.WindowsPrincipal ([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
+
+function prompt {
+  Write-Host "PS" -NoNewline -ForegroundColor DarkBlue
+
+  if ($IsElevated) {
+    Write-Host " E" -NoNewline -ForegroundColor Red
+  }
+
+  Write-Host " $env:USERNAME@$env:COMPUTERNAME" -ForegroundColor DarkGreen -NoNewline
   # from posh-git
-  Write-VcsStatus | Write-Host -NoNewline
+  Get-GitStatus | Write-GitStatus
   Write-Host " $($PWD.Path | Split-Path -Leaf)" -NoNewline
   return "> "
 }
@@ -27,7 +103,7 @@ try {
   Import-Module PSCompletions | Out-Null
 }
 catch { Write-Output "Error importing PSCompletions module" }
-
+ 
 function Add-Completion {
   param($executable)
   $resolvedEx = Get-Command $executable -ErrorAction SilentlyContinue
@@ -59,7 +135,7 @@ Add-completion powershell
 Add-completion pwsh
 Add-Completion 7z
 
-# 
+# winget completions
 if (Get-Command winget -ErrorAction SilentlyContinue) {
   Register-ArgumentCompleter -Native -CommandName winget -ScriptBlock {
     param($wordToComplete, $commandAst, $cursorPosition)
@@ -71,4 +147,3 @@ if (Get-Command winget -ErrorAction SilentlyContinue) {
     }
   }
 }
-

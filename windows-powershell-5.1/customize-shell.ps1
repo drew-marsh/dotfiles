@@ -1,3 +1,4 @@
+param([Switch]$force)
 
 function Install-IfMissing {
   param($module)
@@ -11,8 +12,9 @@ function Install-IfMissing {
     $module `
     -Scope CurrentUser `
     -SkipPublisherCheck `
+    -Force `
     -ErrorAction SilentlyContinue `
-  | Out-Nul
+  | Out-Null
 }
 
 Install-IfMissing posh-git
@@ -33,4 +35,20 @@ if (`$e -eq 1) {
 
 powershell.exe -NoLogo -NoProfile -Command $cmd
 
-& $PSScriptRoot\set-profile.ps1
+$profileExists = Test-Path($PROFILE)
+
+if ($profileExists -and !$force ) {
+  $confirmation = Read-Host "Profile file exists. overwrite? (y/n)"
+  if (!$confirmation.ToLower().Equals("y")) {
+    Write-Output "Exiting"
+    exit 0
+  }
+}
+
+$dir = Split-Path $PROFILE -Parent
+
+if (!(Test-Path $dir)) {
+  md $dir | Out-Null
+}
+
+Get-Content $PSScriptRoot\profile.ps1 | Set-Content -path $PROFILE
