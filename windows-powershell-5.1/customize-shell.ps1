@@ -33,7 +33,8 @@ if (`$e -eq 1) {
 }
 "@
 
-powershell.exe -NoLogo -NoProfile -Command $cmd
+$shell = (Get-Process -Id $PID).ProcessName
+& $shell -NoLogo -NoProfile -Command $cmd
 
 $profileExists = Test-Path($PROFILE)
 

@@ -4,8 +4,17 @@ Clear-Host
 
 $IsElevated = (New-Object Security.Principal.WindowsPrincipal ([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 
+function Write-PSVersion {
+  $psType = "WPS";
+  if ((get-process -id $pid).ProcessName -eq "pwsh") {
+    $psType = "PWSH"
+  }
+
+  Write-Host "$($psType)v$($PSVersionTable.PSVersion.Major)" -NoNewline -ForegroundColor Blue
+}
+
 function prompt {
-  Write-Host "PS" -NoNewline -ForegroundColor Blue
+  Write-PSVersion
 
   if ($IsElevated) {
     Write-Host " E" -NoNewline -ForegroundColor Magenta
@@ -13,7 +22,7 @@ function prompt {
 
   Write-Host " $env:USERNAME@$env:COMPUTERNAME" -ForegroundColor Blue -NoNewline
   # from posh-git
-  Get-GitStatus | Write-GitStatus
+  Get-GitStatus | Write-PromptGitStatus
   Write-Host " $($PWD.Path | Split-Path -Leaf)" -NoNewline
   return "> "
 }

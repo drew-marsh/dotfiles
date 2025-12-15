@@ -9,7 +9,7 @@ $BehindColor = 'Red'
 $NeutralColor = 'Cyan'
 $AheadBehindColor = 'Yellow'
 
-function Write-Branch {
+function Write-PromptBranch {
   param([Parameter(ValueFromPipeline = $true)]
     $gs
   )
@@ -47,7 +47,7 @@ function Write-Branch {
 
 }
 
-function Write-CommitStatus {
+function Write-PromptCommitStatus {
   param([Parameter(ValueFromPipeline = $true)]$gs)
 
   if ($gs.HasIndex) {
@@ -61,7 +61,7 @@ function Write-CommitStatus {
   }
 }
 
-function Write-GitStatus {
+function Write-PromptGitStatus {
   param([Parameter(ValueFromPipeline = $true)]$gs)
 
   if (!$gs) {
@@ -69,6 +69,6 @@ function Write-GitStatus {
   }
 
   Write-Host " " -NoNewline
-  $gs | Write-Branch
-  $gs | Write-CommitStatus
+  $gs | Write-PromptBranch
+  $gs | Write-PromptCommitStatus
 }
