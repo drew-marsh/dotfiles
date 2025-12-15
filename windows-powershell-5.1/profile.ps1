@@ -1,4 +1,7 @@
 $IsElevated = (New-Object Security.Principal.WindowsPrincipal ([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
+# todo - write own git wrapper to get rid of dependency
+import-module posh-git
+
 function prompt {
   Write-Host "PS " -NoNewline -ForegroundColor Blue
 
@@ -7,31 +10,20 @@ function prompt {
   }
 
   Write-Host "$env:USERNAME@$env:COMPUTERNAME" -ForegroundColor Green -NoNewline
-  return " $PWD> "
+  Write-Host " $PWD" -NoNewline
+  # from posh-git
+  Write-VcsStatus | Write-Host -NoNewline
+  return "> "
 }
 
 # lazy loading cannot be done well:
 # https://github.com/PowerShell/PowerShell/issues/17283
 
-# 70ms
-$pscam = Get-Module PSCompletions -ListAvailable
-if (!$pscam) {
-  Install-Module PSCompletions -Scope CurrentUser -ErrorAction SilentlyContinue | Out-Null
-}
-
-# 800 ms :/
 # must be imported manually
 # autoimport does not work because module must be used before cmdlet is called
+# relies on module being installed in setup script
+# 500ms :/
 Import-Module PSCompletions | Out-Null
-
-# 100 ms
-# only use psc menu for added extensions
-# must restart shell after, not ideal
-$e = psc menu config enable_menu_enhance
-
-if ($e -eq 1) {
-  psc menu config enable_menu_enhance 0
-}
 
 function Add-Completion {
   param($executable)
@@ -50,9 +42,7 @@ function Add-Completion {
   psc add $executable
 }
 
-# 200 ms
-Add-Completion git
-Add-Completion winget
+# 150 ms total
 Add-Completion choco
 Add-Completion scoop
 Add-Completion node
@@ -65,4 +55,17 @@ Add-Completion wt
 Add-completion powershell
 Add-completion pwsh
 Add-Completion 7z
+
+# 
+if (Get-Command winget -ErrorAction SilentlyContinue) {
+  Register-ArgumentCompleter -Native -CommandName winget -ScriptBlock {
+    param($wordToComplete, $commandAst, $cursorPosition)
+    [Console]::InputEncoding = [Console]::OutputEncoding = $OutputEncoding = [System.Text.Utf8Encoding]::new()
+    $Local:word = $wordToComplete.Replace('"', '""')
+    $Local:ast = $commandAst.ToString().Replace('"', '""')
+    winget complete --word="$Local:word" --commandline "$Local:ast" --position $cursorPosition | ForEach-Object {
+      [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
+    }
+  }
+}
 
