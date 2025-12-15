@@ -5,13 +5,13 @@ Clear-Host
 $IsElevated = (New-Object Security.Principal.WindowsPrincipal ([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 
 function prompt {
-  Write-Host "PS" -NoNewline -ForegroundColor DarkBlue
+  Write-Host "PS" -NoNewline -ForegroundColor Blue
 
   if ($IsElevated) {
-    Write-Host " E" -NoNewline -ForegroundColor Red
+    Write-Host " E" -NoNewline -ForegroundColor Magenta
   }
 
-  Write-Host " $env:USERNAME@$env:COMPUTERNAME" -ForegroundColor DarkGreen -NoNewline
+  Write-Host " $env:USERNAME@$env:COMPUTERNAME" -ForegroundColor Blue -NoNewline
   # from posh-git
   Get-GitStatus | Write-GitStatus
   Write-Host " $($PWD.Path | Split-Path -Leaf)" -NoNewline
