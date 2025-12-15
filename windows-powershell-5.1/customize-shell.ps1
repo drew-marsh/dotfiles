@@ -46,6 +46,7 @@ if ($profileExists -and !$force ) {
 }
 
 $dir = Split-Path $PROFILE -Parent
+cp $PSScriptRoot\git-utils.ps1 $dir -Force
 
 if (!(Test-Path $dir)) {
   md $dir | Out-Null
