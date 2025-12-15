@@ -5,12 +5,12 @@ Clear-Host
 $IsElevated = (New-Object Security.Principal.WindowsPrincipal ([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 
 function Write-PSVersion {
-  $psType = "WPS";
+  $psType = "wps";
   if ((get-process -id $pid).ProcessName -eq "pwsh") {
-    $psType = "PWSH"
+    $psType = "pwsh"
   }
 
-  Write-Host "$($psType)v$($PSVersionTable.PSVersion.Major)" -NoNewline -ForegroundColor Blue
+  Write-Host "$($psType)$($PSVersionTable.PSVersion.Major)" -NoNewline -ForegroundColor Blue
 }
 
 function prompt {
