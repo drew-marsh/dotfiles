@@ -16,32 +16,34 @@ function Write-PromptBranch {
 
   $branch = $gs.Branch
 
+  Write-Host $branch -NoNewline -ForegroundColor $NeutralColor
+
   if (!$gs.Upstream) {
-    Write-Host $branch -NoNewline -ForegroundColor $AheadColor
+    Write-Host " _" -NoNewline -ForegroundColor $AheadColor
     return
   }
 
   if ($gs.UpstreamGone -eq $true) {
-    Write-Host "$branch $Ex" -NoNewline -ForegroundColor $BehindColor
+    Write-Host " $Ex" -NoNewline -ForegroundColor $BehindColor
     return
   }
 
   if (($gs.BehindBy -eq 0) -and ($gs.AheadBy -eq 0)) {
-    Write-Host "$branch $TripEq" -NoNewline -ForegroundColor $NeutralColor
+    Write-Host " $TripEq" -NoNewline -ForegroundColor $NeutralColor
     return
   }
 
   if (($gs.BehindBy -ge 1) -and ($gs.AheadBy -ge 1)) {
-    Write-Host "$branch $UpDown" -NoNewline -ForegroundColor $AheadBehindColor
+    Write-Host " $UpDown" -NoNewline -ForegroundColor $AheadBehindColor
   }
 
   if (($gs.BehindBy -ge 1)) {
-    Write-Host "$branch $Down" -NoNewline -ForegroundColor $BehindColor
+    Write-Host " $Down" -NoNewline -ForegroundColor $BehindColor
     return
   }
 
   if (($gs.AheadBy -ge 1)) {
-    Write-Host "$branch $Up" -NoNewline -ForegroundColor $AheadColor
+    Write-Host " $Up" -NoNewline -ForegroundColor $AheadColor
     return
   }
 
