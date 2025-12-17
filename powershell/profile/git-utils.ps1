@@ -14,9 +14,7 @@ function Write-PromptBranch {
     $gs
   )
 
-  $branch = $gs.Branch
-
-  Write-Host $branch -NoNewline -ForegroundColor $NeutralColor
+  Write-Host "$($gs.RepoName)|$($gs.branch)" -NoNewline -ForegroundColor $NeutralColor
 
   if (!$gs.Upstream) {
     Write-Host " _" -NoNewline -ForegroundColor $AheadColor
