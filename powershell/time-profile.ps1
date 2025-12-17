@@ -1,6 +1,6 @@
 $cmd = @"
 `$t = measure-command {
-  . $PSScriptRoot\profile.ps1
+  . $PSScriptRoot\profile\profile.ps1
   }
 ""`$([Math]::Round(`$t.totalMilliseconds)) ms""
 "@
