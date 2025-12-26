@@ -72,3 +72,12 @@ function Write-PromptGitStatus {
   $gs | Write-PromptBranch
   $gs | Write-PromptCommitStatus
 }
+
+function Get-GitRoot {
+  if ($env:GIT_INSTALL_ROOT) {
+    return $env:GIT_INSTALL_ROOT
+  }
+
+  $GitCmdDir = Get-Command git | Select-Object -ExpandProperty Source | Split-Path
+  [System.IO.Path]::GetFullPath((join-path $GitCmdDir ..))
+}

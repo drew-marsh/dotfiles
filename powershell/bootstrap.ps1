@@ -5,8 +5,14 @@ if ($MyInvocation.InvocationName -ne '.') {
   throw "This script must be dot-sourced"
 }
 
+$IsElevated = (New-Object Security.Principal.WindowsPrincipal ([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
+
 $scoop = get-command scoop -ErrorAction SilentlyContinue
 if (!$scoop) {
+  if ($IsElevated) {
+    throw "Scoop install requires non-elevated shell"
+  }
+  
   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
   Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 }

@@ -1,5 +1,7 @@
 param([Switch]$force)
 
+. $PSScriptRoot\profile\utils.ps1
+
 # must dot source
 # Import-Module PSCompletions only works in global scope
 if ($MyInvocation.InvocationName -ne '.') {
@@ -9,6 +11,9 @@ if ($MyInvocation.InvocationName -ne '.') {
 # dependencies
 $scoop = get-command scoop -ErrorAction SilentlyContinue
 if (!$scoop) {
+  if (Is-Elevated) {
+    throw "Scoop install requires non-elevated shell"
+  }
   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
   Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 }

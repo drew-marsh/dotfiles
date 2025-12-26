@@ -1,10 +1,10 @@
 Clear-Host
 . $PSScriptRoot\git-utils.ps1
 . $PSScriptRoot\completions.ps1
+. $PSScriptRoot\utils.ps1
 
-Set-Alias less "$env:GIT_INSTALL_ROOT\usr\bin\less.exe"
-
-$IsElevated = (New-Object Security.Principal.WindowsPrincipal ([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
+$IsElevated = Is-Elevated
+Set-Alias less "$(Get-GitRoot)\usr\bin\less.exe"
 
 function prompt {
   Write-Host "PS$($PSVersionTable.PSVersion.Major)" -NoNewline -ForegroundColor Blue
