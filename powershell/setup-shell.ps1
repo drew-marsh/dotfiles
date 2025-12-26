@@ -7,6 +7,12 @@ if ($MyInvocation.InvocationName -ne '.') {
 }
 
 # dependencies
+$scoop = get-command scoop
+if (!$scoop) {
+  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+  Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+}
+
 function Install-IfMissing {
   param($module)
   $installedModule = Get-Module $module -ListAvailable
@@ -21,6 +27,7 @@ function Install-IfMissing {
     -SkipPublisherCheck `
     -Force `
     -ErrorAction SilentlyContinue `
+    -AllowClobber `
   | Out-Null
 }
 
@@ -84,3 +91,17 @@ if (!(Test-Path $dir)) {
 
 cp -r $PSScriptRoot\profile\* $dir -Force
 mv -Force $dir\profile.ps1 $PROFILE
+
+# Fzf
+$fzf = get-command fzf -ErrorAction SilentlyContinue
+if (!$fzf) {
+  scoop install fzf
+}
+
+Install-IfMissing PSFzf
+Install-IfMIssing z
+
+$psReadLine = get-module PSReadLine
+if (!$psReadLine -or ($psReadLine.Version.Minor -lt 1)) {
+  Install-Module PSReadLine -Force -SkipPublisherCheck -Scope CurrentUser
+}

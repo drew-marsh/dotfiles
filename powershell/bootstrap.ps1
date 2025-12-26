@@ -1,0 +1,19 @@
+# Zero-requirement script to initialize powershell environment
+
+$scoop = get-command scoop -ErrorAction SilentlyContinue
+if (!$scoop) {
+  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+  Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+}
+
+$git = get-command git -ErrorAction SilentlyContinue
+if (!$git) {
+  scoop install git
+  git config --global user.name "Drew Marshall"
+  git config --global user.email "thedrewguy@gmail.com"
+  git config --global init.defaultbranch main
+  git config --global push.autosetupremote true
+}
+
+git clone git@github.com:drew-marsh/dotfiles
+. .\dotfiles\powershell\setup-shell.ps1
