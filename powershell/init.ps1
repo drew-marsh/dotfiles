@@ -7,7 +7,7 @@ if ($MyInvocation.InvocationName -ne '.') {
 }
 
 # dependencies
-$scoop = get-command scoop
+$scoop = get-command scoop -ErrorAction SilentlyContinue
 if (!$scoop) {
   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
   Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression

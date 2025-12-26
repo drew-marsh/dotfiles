@@ -1,5 +1,10 @@
 # Zero-requirement script to initialize powershell environment
 
+# must dot source
+if ($MyInvocation.InvocationName -ne '.') {
+  throw "This script must be dot-sourced"
+}
+
 $scoop = get-command scoop -ErrorAction SilentlyContinue
 if (!$scoop) {
   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
