@@ -16,4 +16,4 @@ if (!$git) {
 }
 
 git clone git@github.com:drew-marsh/dotfiles
-. .\dotfiles\powershell\setup-shell.ps1
+. .\dotfiles\powershell\init.ps1
