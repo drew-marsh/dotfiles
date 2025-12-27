@@ -1,10 +1,4 @@
 # Zero-requirement script to initialize powershell environment
-
-# must dot source
-if ($MyInvocation.InvocationName -ne '.') {
-  throw "This script must be dot-sourced"
-}
-
 $IsElevated = (New-Object Security.Principal.WindowsPrincipal ([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 
 $scoop = get-command scoop -ErrorAction SilentlyContinue

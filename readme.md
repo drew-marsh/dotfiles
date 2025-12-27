@@ -12,4 +12,4 @@ Requires non-elevated shell
 Initializes powershell environment, from this repo.
 Requires non-elevated shell
 
-`. .\powershell\init -force`
+`.\powershell\init -force`

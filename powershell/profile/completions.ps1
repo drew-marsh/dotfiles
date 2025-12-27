@@ -14,30 +14,6 @@ $completions["winget"] = { if (Get-Command winget -ErrorAction SilentlyContinue)
         }
     } }
 
-$script:PSCompletionsImported = $false
-$importPsCompletions = {
-    if ($script:PSCompletionsImported) {
-        return;
-    }
-    Import-Module PSCompletions
-    $script:PSCompletionsImported = $true
-}
-
-$completions["psc"] = { . $importPsCompletions }
-$completions["scoop"] = { . $importPsCompletions }
-$completions["choco"] = { . $importPsCompletions }
-$completions["wt"] = { . $importPsCompletions }
-$completions["powershell"] = { . $importPsCompletions }
-$completions["pwsh"] = { . $importPsCompletions }
-$completions["docker"] = { . $importPsCompletions }
-$completions["wsl"] = { . $importPsCompletions }
-$completions["npm"] = { . $importPsCompletions }
-$completions["node"] = { . $importPsCompletions }
-$completions["nvm"] = { . $importPsCompletions }
-$completions["cargo"] = { . $importPsCompletions }
-$completions["7z"] = { . $importPsCompletions }
-
-
 $getExecutionContextFromTLS = [PowerShell].Assembly.GetType('System.Management.Automation.Runspaces.LocalPipeline').GetMethod(
     'GetExecutionContextFromTLS',
     [System.Reflection.BindingFlags]'Static,NonPublic'
