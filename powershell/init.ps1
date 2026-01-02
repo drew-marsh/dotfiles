@@ -1,6 +1,7 @@
 param([Switch]$force)
 
 . $PSScriptRoot\profile\utils.ps1
+. $PSScriptRoot\profile\git-utils.ps1
 
 # dependencies
 $scoop = get-command scoop -ErrorAction SilentlyContinue
@@ -32,6 +33,24 @@ function Install-IfMissing {
 
 Install-IfMissing posh-git
 
+# Fzf
+$fzf = get-command fzf -ErrorAction SilentlyContinue
+if (!$fzf) {
+  scoop install fzf
+}
+
+Install-IfMissing PSFzf
+Install-IfMIssing z
+
+$psReadLine = get-module PSReadLine
+if (!$psReadLine -or ($psReadLine.Version.Minor -lt 1)) {
+  Install-Module PSReadLine -Force -SkipPublisherCheck -Scope CurrentUser
+}
+
+$GitRoot = Get-GitRoot
+Set-Alias bash "$GitRoot\bin\bash.exe"
+bash $PSScriptRoot\profile\argc-completions\scripts\download-tools.sh
+
 # overwrite profile
 $profileExists = Test-Path($PROFILE)
 
@@ -51,17 +70,3 @@ if (!(Test-Path $dir)) {
 
 cp -r $PSScriptRoot\profile\* $dir -Force
 mv -Force $dir\profile.ps1 $PROFILE
-
-# Fzf
-$fzf = get-command fzf -ErrorAction SilentlyContinue
-if (!$fzf) {
-  scoop install fzf
-}
-
-Install-IfMissing PSFzf
-Install-IfMIssing z
-
-$psReadLine = get-module PSReadLine
-if (!$psReadLine -or ($psReadLine.Version.Minor -lt 1)) {
-  Install-Module PSReadLine -Force -SkipPublisherCheck -Scope CurrentUser
-}
