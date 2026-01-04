@@ -2,6 +2,7 @@ Clear-Host
 . $PSScriptRoot\git-utils.ps1
 . $PSScriptRoot\completions.ps1
 . $PSScriptRoot\utils.ps1
+. $PSScriptRoot\fzf.ps1
 
 $IsElevated = Is-Elevated
 $GitRoot = Get-GitRoot
@@ -20,9 +21,6 @@ function prompt {
   Write-Host " $($PWD.Path | Split-Path -Leaf)" -NoNewline
   return "> "
 }
-
-Import-Module PSFzf
-Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
 
 Set-PSReadLineOption -BellStyle None
 
