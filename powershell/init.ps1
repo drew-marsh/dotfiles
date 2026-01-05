@@ -3,24 +3,37 @@ param([Switch]$force)
 . $PSScriptRoot\profile\utils.ps1
 . $PSScriptRoot\profile\git-utils.ps1
 
-# dependencies
-$scoop = get-command scoop -ErrorAction SilentlyContinue
-if (!$scoop) {
-  if (Is-Elevated) {
-    throw "Scoop install requires non-elevated shell"
-  }
-  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-  Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
-}
+function Install-ScoopBucketIfMissing {
+  param($bucket)
+  $installedBucket = scoop bucket list | select-object -expandproperty name | findstr $bucket
 
-function Install-IfMissing {
-  param($module)
-  $installedModule = Get-Module $module -ListAvailable
-
-  if ($installedModule) {
+  if ($installedBucket) {
     return;
   }
 
+  scoop bucket add $bucket
+}
+
+function Install-ScoopPackageIfMissing {
+  param($package)
+  $installedPackage = scoop list 6> $null | select-object -expandproperty name | findstr $package
+
+  if ($installedPackage) {
+    return;
+  }
+
+  scoop install $package
+}
+
+
+function Install-ModuleIfMissing {
+  param($module)
+  $installedModule = Get-Module $module -ListAvailable
+  
+  if ($installedModule) {
+    return;
+  }
+  
   Install-Module `
     $module `
     -Scope CurrentUser `
@@ -31,18 +44,30 @@ function Install-IfMissing {
   | Out-Null
 }
 
-Install-IfMissing posh-git
+$scoop = get-command scoop -ErrorAction SilentlyContinue
+if (!$scoop) {
+  if (Is-Elevated) {
+    throw "Scoop install requires non-elevated shell"
+  }
+  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+  Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+}
 
-# Fzf
+Install-ScoopBucketIfMissing nerd-fonts
+Install-ScoopPackageIfMissing Hack-NF-Mono
+
 $fzf = get-command fzf -ErrorAction SilentlyContinue
+
 if (!$fzf) {
   scoop install fzf
 }
 
-Install-IfMissing PSFzf
-Install-IfMIssing z
+Install-ModuleIfMissing PSFzf
+Install-ModuleIfMissing posh-git
+Install-ModuleIfMissing z
 
 $psReadLine = get-module PSReadLine
+
 if (!$psReadLine -or ($psReadLine.Version.Minor -lt 1)) {
   Install-Module PSReadLine -Force -SkipPublisherCheck -Scope CurrentUser
 }
@@ -68,5 +93,5 @@ if (!(Test-Path $dir)) {
   md $dir | Out-Null
 }
 
-cp -r $PSScriptRoot\profile\* $dir -Force
+robocopy $PSScriptRoot\profile $dir /E
 mv -Force $dir\profile.ps1 $PROFILE
