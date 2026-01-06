@@ -1,9 +1,9 @@
-$cmd = @"
-`$t = measure-command {
-  . $PSScriptRoot\profile\profile.ps1
+$cmd = {
+  param($profilePath)
+  $t = measure-command {
+    . $profilePath
   }
-""`$([Math]::Round(`$t.totalMilliseconds)) ms""
-"@
+  "$([Math]::Round($t.totalMilliseconds)) ms"
+}
 
-# profile needs interactive session
-powershell.exe -NoLogo -NoProfile -Command $cmd
+pwsh.exe -NoLogo -NoProfile -Command $cmd -Args "$PSScriptRoot\profile\profile.ps1"
