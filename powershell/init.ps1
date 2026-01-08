@@ -65,6 +65,7 @@ if (!$fzf) {
 Install-ModuleIfMissing PSFzf
 Install-ModuleIfMissing posh-git
 Install-ModuleIfMissing z
+Install-ModuleIfMissing oh-my-posh
 
 $psReadLine = get-module PSReadLine
 

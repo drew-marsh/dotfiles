@@ -13,3 +13,5 @@ Set-PSReadLineOption -BellStyle None
 function which($command) {
   Get-Command $command -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
 }
+
+oh-my-posh init pwsh --config $PSScriptRoot\omp-themes\drew.omp.json | Invoke-Expression
