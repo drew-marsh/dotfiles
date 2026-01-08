@@ -1,7 +1,6 @@
 param([Switch]$force)
 
 . $PSScriptRoot\profile\utils.ps1
-. $PSScriptRoot\profile\git-utils.ps1
 
 function Install-ScoopBucketIfMissing {
   param($bucket)
