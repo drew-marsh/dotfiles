@@ -21,6 +21,12 @@
           "type": "shell"
         },
         {
+          "foreground": "p:maroon",
+          "style": "plain",
+          "template": "{{ if .Root }}E {{ end }}",
+          "type": "session"
+        },
+        {
           "foreground": "p:blue",
           "style": "plain",
           "template": "{{ .UserName }}@{{ .HostName }} ",
