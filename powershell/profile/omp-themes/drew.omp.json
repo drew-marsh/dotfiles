@@ -17,7 +17,7 @@
         {
           "foreground": "p:lavender",
           "style": "plain",
-          "template": "{{.Name}} ",
+          "template": "{{ if eq (substr 0 1 .Version) \"5\" }}ps{{ else }}pwsh{{ end }}{{ substr 0 1 .Version }} ",
           "type": "shell"
         },
         {
