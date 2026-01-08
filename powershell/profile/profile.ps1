@@ -11,7 +11,12 @@ Set-Alias bash "$GitRoot\bin\bash.exe"
 Set-PSReadLineOption -BellStyle None
 
 function which($command) {
-  Get-Command $command -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
+  $ErrorActionPreference = 'SilentlyContinue'
+  Get-Command $command | Select-Object -ExpandProperty Path
+}
+function whichdir($command) {
+  $ErrorActionPreference = 'SilentlyContinue'
+  Get-Command $command | Select-Object -ExpandProperty Path | Split-Path
 }
 
 oh-my-posh init pwsh --config $PSScriptRoot\omp-themes\drew.omp.json | Invoke-Expression

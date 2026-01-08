@@ -53,8 +53,7 @@ if (!$scoop) {
   Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 }
 
-Install-ScoopBucketIfMissing nerd-fonts
-Install-ScoopPackageIfMissing Hack-NF-Mono
+Install-ScoopPackageIfMissing oh-my-posh
 
 $fzf = get-command fzf -ErrorAction SilentlyContinue
 
@@ -63,9 +62,7 @@ if (!$fzf) {
 }
 
 Install-ModuleIfMissing PSFzf
-Install-ModuleIfMissing posh-git
 Install-ModuleIfMissing z
-Install-ModuleIfMissing oh-my-posh
 
 $psReadLine = get-module PSReadLine
 
@@ -78,7 +75,7 @@ Set-Alias bash "$GitRoot\bin\bash.exe"
 bash $PSScriptRoot\profile\argc-completions\scripts\download-tools.sh
 
 # overwrite profile
-$profileExists = Test-Path($PROFILE)
+$profileExists = Test-Path $PROFILE
 
 if ($profileExists -and !$force ) {
   $confirmation = Read-Host "Profile file exists. overwrite? (y/n)"
