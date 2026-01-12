@@ -9,6 +9,10 @@ Set-Alias bash "$GitRoot\bin\bash.exe"
 
 Set-PSReadLineOption -BellStyle None
 
+if ($PSStyle) {
+  $PSStyle.FileInfo.Directory = "`e[34m"
+}
+
 function which($command) {
   $ErrorActionPreference = 'SilentlyContinue'
   Get-Command $command | Select-Object -ExpandProperty Path
