@@ -7,7 +7,8 @@
     "blue": "#89B4FA",
     "maroon": "#EBA0AC",
     "teal": "#94e2d5",
-    "sky": "#89dceb"
+    "sky": "#89dceb",
+    "sapphire": "#74c7ec"
   },
   "blocks": [
     {
@@ -26,7 +27,7 @@
           "type": "session"
         },
         {
-          "foreground": "p:blue",
+          "foreground": "p:sapphire",
           "style": "plain",
           "template": "{{ .UserName }}@{{ .HostName }} ",
           "type": "session"
@@ -72,7 +73,9 @@
           "type": "status",
           "style": "plain",
           "foreground": "p:closer",
-          "foreground_templates": ["{{ if gt .Code 0 }}p:maroon{{ end }}"],
+          "foreground_templates": [
+            "{{ if gt .Code 0 }}p:maroon{{ end }}"
+          ],
           "template": "\uf105",
           "options": {
             "always_enabled": true
@@ -85,7 +88,9 @@
     "type": "status",
     "style": "plain",
     "foreground": "p:closer",
-    "foreground_templates": ["{{ if gt .Code 0 }}p:maroon{{ end }}"],
+    "foreground_templates": [
+      "{{ if gt .Code 0 }}p:maroon{{ end }}"
+    ],
     "template": "\uf105 "
   },
   "final_space": true,
