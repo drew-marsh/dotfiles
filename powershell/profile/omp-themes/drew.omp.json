@@ -59,7 +59,7 @@
             "revert_icon": "\uf0e2 ",
             "tag_icon": "\uf412 "
           },
-          "template": "{{ .HEAD }} {{ if not (or .Ahead .Behind) }}\u2261{{ end }}{{ if .Ahead }}<#89dceb>\u2191</>{{ end }}<#EBA0AC>{{ if .Behind }}\u2193{{ end }}{{ if .Staging.Changed }}<#89dceb>+</>{{ end }}{{ if or .Working.Modified .Working.Deleted }}*{{ end }}{{ if .Working.Untracked }}?{{ end }}</>"
+          "template": "{{ .HEAD }} {{ if .UpstreamGone }}<p:maroon>\u2262</>{{ else if not (or .Ahead .Behind) }}\u2261{{ end }}{{ if .Ahead }}<p:sky>\u2191</>{{ end }}<p:maroon>{{ if .Behind }}\u2193{{ end }}{{ if .Staging.Changed }}<p:sky>+</>{{ end }}{{ if or .Working.Modified .Working.Deleted }}*{{ end }}{{ if .Working.Untracked }}?{{ end }}</>"
         }
       ],
       "type": "prompt"
