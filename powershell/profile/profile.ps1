@@ -1,3 +1,10 @@
+$isSsh = [bool]($env:SSH_CONNECTION -or $env:SSH_CLIENT)
+$hasSshTty = [bool]($env:SSH_TTY)
+
+if($isSsh -and -not $hasSshTty){
+  return;
+}
+
 Clear-Host
 . $PSScriptRoot\completions.ps1
 . $PSScriptRoot\fzf.ps1
