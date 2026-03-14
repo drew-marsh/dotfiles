@@ -34,6 +34,7 @@ function Write-PromptBranch {
 
   if (($gs.BehindBy -ge 1) -and ($gs.AheadBy -ge 1)) {
     Write-Host " $UpDown" -NoNewline -ForegroundColor $AheadBehindColor
+    return
   }
 
   if (($gs.BehindBy -ge 1)) {
