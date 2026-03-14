@@ -52,8 +52,6 @@ if (!$scoop) {
   Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 }
 
-Install-ScoopPackageIfMissing oh-my-posh
-
 $fzf = get-command fzf -ErrorAction SilentlyContinue
 
 if (!$fzf) {
@@ -62,6 +60,7 @@ if (!$fzf) {
 
 Install-ModuleIfMissing PSFzf
 Install-ModuleIfMissing z
+Install-ModuleIfMissing Posh-Git
 
 $psReadLine = get-module PSReadLine
 
@@ -71,7 +70,7 @@ if (!$psReadLine -or ($psReadLine.Version.Minor -lt 1)) {
 
 $GitRoot = Get-GitRoot
 Set-Alias bash "$GitRoot\bin\bash.exe"
-bash $PSScriptRoot\profile\argc-completions\scripts\download-tools.sh
+bash $PSScriptRoot\profile\argc-completions\scripts\download-tools.sh | Out-Null
 
 # overwrite profile
 $profileExists = Test-Path $PROFILE
@@ -90,5 +89,5 @@ if (!(Test-Path $dir)) {
   md $dir | Out-Null
 }
 
-robocopy $PSScriptRoot\profile $dir /E
+robocopy $PSScriptRoot\profile $dir /E | Out-Null
 mv -Force $dir\profile.ps1 $PROFILE
