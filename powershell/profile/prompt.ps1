@@ -92,30 +92,34 @@ function Write-PromptGitStatus {
   $gs | Write-PromptCommitStatus
 }
 
-function getShellDescription() {
+function getShExe() {
   $Major = $PSVersionTable.PSVersion.Major
   if ($Major -gt 5) {
-    return "pwsh$Major"
+    return "pwsh"
   }
 
-  return "ps$Major"
+  return "powershell"
 }
 
-$shellDescription = getShellDescription
+$shExe = getShExe
 
 function prompt {
-  Write-Host "$($esc.lavender)$shellDescription$($esc.Reset)" -NoNewline
 
   if ($IsElevated) {
-    Write-Host " $($esc.maroon)E$($esc.reset)" -NoNewline
+    Write-Host "$($esc.maroon)E $($esc.reset)" -NoNewline
   }
 
-  Write-Host " $($esc.sapphire)$env:COMPUTERNAME$($esc.Reset)" -NoNewline
+  Write-Host "$($esc.sapphire)$env:COMPUTERNAME$($esc.Reset)" -NoNewline
   Write-Host " $($esc.pink)$($PWD.Path | Split-Path -Leaf)$($esc.Reset)" -NoNewline
   Get-GitStatus | Write-PromptGitStatus
-  Write-Host ""
-  return $promptText
+  write-host " " -NoNewline
+
+  if ($shExe -eq "pwsh") {
+    # multi-line prompt only in pwsh
+    Write-Host ""
+  }
   
+  return $promptText
 }
 
 Set-PSReadLineOption -PromptText $promptText
