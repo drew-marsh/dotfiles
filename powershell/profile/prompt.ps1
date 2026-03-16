@@ -1,21 +1,29 @@
 . $PSScriptRoot\utils.ps1
 
+
 $IsElevated = Is-Elevated
-
-$Up = [char]0x2191 
-$Down = [char]0x2193
-$TripEq = [char]0x2261
-$NotTripEq = [char]0x2262
-$Ex = [char]0x00D7
-
 Import-Module Catppuccin
 $flavor = $catppuccin['Mocha']
-$lavender = $flavor.lavender.foreground()
-$maroon = $flavor.maroon.foreground()
-$sky = $flavor.sky.foreground()
-$Sapphire = $Flavor.sapphire.foreground()
-$Pink = $Flavor.pink.foreground()
-$reset = "$([char]0x1b)[0m"
+
+$esc = @{
+  lavender = $flavor.lavender.foreground()
+  maroon   = $flavor.maroon.foreground()
+  sky      = $flavor.sky.foreground()
+  Sapphire = $Flavor.sapphire.foreground()
+  Pink     = $Flavor.pink.foreground()
+  reset    = "$([char]0x1b)[0m"
+}
+
+$chars = @{
+  up        = [char]0x2191;
+  down      = [char]0x2193;
+  tripEq    = [char]0x2261;
+  notTripEq = [char]0x2262;
+  ex        = [char]0x00D7;
+  gt        = [char]0xf105;
+}
+
+$promptText = "$($chars.gt) "
 
 
 function Write-PromptBranch {
@@ -24,35 +32,35 @@ function Write-PromptBranch {
   )
 
   # Write-Host "$($gs.RepoName)|" -NoNewline
-  Write-Host "$lavender$($gs.branch)$reset" -NoNewline
+  Write-Host "$($esc.lavender)$($gs.branch)$($esc.reset)" -NoNewline
 
   if (!$gs.Upstream) {
-    Write-Host " $($maroon)_$reset" -NoNewline
+    Write-Host " $($esc.maroon)_$($esc.reset)" -NoNewline
     return
   }
 
   if ($gs.UpstreamGone -eq $true) {
-    Write-Host " $maroon$Ex$reset" -NoNewline
+    Write-Host " $($esc.maroon)$($chars.Ex)$($esc.reset)" -NoNewline
     return
   }
 
   if (($gs.BehindBy -eq 0) -and ($gs.AheadBy -eq 0)) {
-    Write-Host " $lavender$TripEq$reset" -NoNewline
+    Write-Host " $($esc.lavender)$($chars.TripEq)$($esc.reset)" -NoNewline
     return
   }
 
   if (($gs.BehindBy -ge 1) -and ($gs.AheadBy -ge 1)) {
-    Write-Host " $peach$NotTripEq$reset" -NoNewline
+    Write-Host " $($esc.peach)$($chars.NotTripEq)$($esc.reset)" -NoNewline
     return
   }
 
   if (($gs.BehindBy -ge 1)) {
-    Write-Host " $maroon$Down$reset" -NoNewline
+    Write-Host " $($esc.maroon)$($chars.down)$($esc.reset)" -NoNewline
     return
   }
 
   if (($gs.AheadBy -ge 1)) {
-    Write-Host " $sky$Up$reset" -NoNewline
+    Write-Host " $($esc.sky)$($chars.up)$($esc.reset)" -NoNewline
     return
   }
 
@@ -62,13 +70,13 @@ function Write-PromptCommitStatus {
   param([Parameter(ValueFromPipeline = $true)]$gs)
 
   if ($gs.HasIndex) {
-    Write-Host -NoNewline "$sky+$reset"
+    Write-Host -NoNewline "$($esc.sky)+$($esc.reset)"
   }
   if ($gs.Working.Modified) {
-    Write-Host -NoNewline "$maroon*$reset"
+    Write-Host -NoNewline "$($esc.maroon)*$($esc.reset)"
   }
   if ($gs.Working.Added) {
-    Write-Host -NoNewline "$maroon?$reset"
+    Write-Host -NoNewline "$($esc.maroon)?$($esc.reset)"
   }
 }
 
@@ -96,17 +104,18 @@ function getShellDescription() {
 $shellDescription = getShellDescription
 
 function prompt {
-  Write-Host "$Lavender$shellDescription$Reset" -NoNewline
+  Write-Host "$($esc.lavender)$shellDescription$($esc.Reset)" -NoNewline
 
   if ($IsElevated) {
-    Write-Host " $($Maroon)E" -NoNewline
+    Write-Host " $($esc.maroon)E$($esc.reset)" -NoNewline
   }
 
-  Write-Host " $Sapphire$env:COMPUTERNAME$Reset" -NoNewline
-  Write-Host " $Pink$($PWD.Path | Split-Path -Leaf)$Reset" -NoNewline
+  Write-Host " $($esc.sapphire)$env:COMPUTERNAME$($esc.Reset)" -NoNewline
+  Write-Host " $($esc.pink)$($PWD.Path | Split-Path -Leaf)$($esc.Reset)" -NoNewline
   Get-GitStatus | Write-PromptGitStatus
   Write-Host ""
-  return "$([char]0xf105) "
+  return $promptText
   
 }
 
+Set-PSReadLineOption -PromptText $promptText
