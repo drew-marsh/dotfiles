@@ -6,11 +6,11 @@ if ($isSsh -and -not $hasSshTty) {
 }
 
 Clear-Host
+
 . $PSScriptRoot\completions.ps1
 . $PSScriptRoot\fzf.ps1
 . $PSScriptRoot\utils.ps1
 . $PSScriptRoot\prompt.ps1
-. $PSScriptRoot\git-utils.ps1
 
 $GitRoot = Get-GitRoot
 Set-Alias less "$GitRoot\usr\bin\less.exe"

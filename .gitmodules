@@ -1,3 +1,6 @@
 [submodule "powershell/profile/argc-completions"]
 	path = powershell/profile/argc-completions
 	url = git@github.com:sigoden/argc-completions
+[submodule "powershell/modules/catppuccin"]
+	path = powershell/modules/catppuccin
+	url = git@github.com:catppuccin/powershell

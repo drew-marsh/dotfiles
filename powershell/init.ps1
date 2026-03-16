@@ -62,12 +62,20 @@ Install-ModuleIfMissing PSFzf
 Install-ModuleIfMissing z
 Install-ModuleIfMissing Posh-Git
 
+$catppuccinModule = Get-Module catppuccin -ListAvailable
+
+if (-not $catppuccinModule) {
+  $moduleDir = $env:PSModulePath.Split(';')[0];
+  robocopy $PSScriptRoot\modules\catppuccin $moduleDir\Catppuccin /E | Out-Null
+}
+
 $psReadLine = get-module PSReadLine
 
 if (!$psReadLine -or ($psReadLine.Version.Minor -lt 1)) {
   Install-Module PSReadLine -Force -SkipPublisherCheck -Scope CurrentUser
 }
 
+# download argc-completions tools
 $GitRoot = Get-GitRoot
 Set-Alias bash "$GitRoot\bin\bash.exe"
 bash $PSScriptRoot\profile\argc-completions\scripts\download-tools.sh | Out-Null
