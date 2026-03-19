@@ -104,12 +104,13 @@ function getShExe() {
 $shExe = getShExe
 
 function prompt {
+  Write-Host "$($esc.lavender)$shExe$($PSVersionTable.PSVersion.Major)" -NoNewline
 
   if ($IsElevated) {
-    Write-Host "$($esc.maroon)E $($esc.reset)" -NoNewline
+    Write-Host "$($esc.maroon) E$($esc.reset)" -NoNewline
   }
 
-  Write-Host "$($esc.sapphire)$env:COMPUTERNAME$($esc.Reset)" -NoNewline
+  Write-Host " $($esc.sapphire)$env:COMPUTERNAME$($esc.Reset)" -NoNewline
   Write-Host " $($esc.pink)$($PWD.Path | Split-Path -Leaf)$($esc.Reset)" -NoNewline
   Get-GitStatus | Write-PromptGitStatus
   write-host " " -NoNewline
