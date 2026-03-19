@@ -9,8 +9,10 @@ $esc = @{
   lavender = $flavor.lavender.foreground()
   maroon   = $flavor.maroon.foreground()
   sky      = $flavor.sky.foreground()
+  blue     = $flavor.blue.foreground()
   Sapphire = $Flavor.sapphire.foreground()
   Pink     = $Flavor.pink.foreground()
+  overlay2 = $Flavor.Overlay2.Foreground()
   reset    = "$([char]0x1b)[0m"
 }
 
@@ -103,17 +105,25 @@ function getShExe() {
 
 $shExe = getShExe
 
+function Write-PromptPath {
+  $path = $PWD.path
+  $parent = $path | Split-Path -Parent
+  $leaf = $path | Split-Path -Leaf
+
+  Write-Host -NoNewline " $($esc.overlay2)$parent$($esc.reset)`\"
+  Write-Host -NoNewline "$($esc.pink)$leaf$($esc.reset)"
+}
+
 function prompt {
-  Write-Host "$($esc.lavender)$shExe$($PSVersionTable.PSVersion.Major)" -NoNewline
+  Write-Host "$($esc.blue)$shExe$($PSVersionTable.PSVersion.Major)$($esc.reset)" -NoNewline
 
   if ($IsElevated) {
     Write-Host "$($esc.maroon) E$($esc.reset)" -NoNewline
   }
 
   Write-Host " $($esc.sapphire)$env:COMPUTERNAME$($esc.Reset)" -NoNewline
-  Write-Host " $($esc.pink)$($PWD.Path | Split-Path -Leaf)$($esc.Reset)" -NoNewline
   Get-GitStatus | Write-PromptGitStatus
-  write-host " " -NoNewline
+  Write-PromptPath
 
   if ($shExe -eq "pwsh") {
     # multi-line prompt only in pwsh
