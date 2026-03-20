@@ -21,6 +21,4 @@ if (!$git) {
 }
 
 git clone git@github.com:drew-marsh/dotfiles
-git -C dotfiles submodule init
-git -C dotfiles submodule update
 . .\dotfiles\powershell\init.ps1

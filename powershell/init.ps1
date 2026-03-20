@@ -2,6 +2,11 @@ param([Switch]$force)
 
 . $PSScriptRoot\profile\utils.ps1
 
+$gitRoot = $PSScriptRoot | Split-Path -Parent
+
+git -C $gitRoot submodule init
+git -C $gitRoot submodule update
+
 function Install-ScoopBucketIfMissing {
   param($bucket)
   $installedBucket = scoop bucket list | select-object -expandproperty name | findstr $bucket

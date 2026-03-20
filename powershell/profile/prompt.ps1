@@ -110,6 +110,16 @@ function getShExe() {
 
 $shExe = getShExe
 
+function getShDesc {
+  if ($shExe -eq "pwsh") {
+    return "pwsh"
+  }
+
+  return "ps"
+}
+
+$shDesc = getShDesc
+
 function Write-PromptPath {
   $path = $PWD.path
   $parent = $path | Split-Path -Parent
@@ -120,7 +130,7 @@ function Write-PromptPath {
 }
 
 function prompt {
-  Write-Host "$($esc.blue)$shExe$($PSVersionTable.PSVersion.Major)$($esc.reset)" -NoNewline
+  Write-Host "$($esc.blue)$shDesc$($esc.reset)" -NoNewline
 
   if ($IsElevated) {
     Write-Host "$($esc.maroon) E$($esc.reset)" -NoNewline
@@ -129,12 +139,7 @@ function prompt {
   Write-Host " $($esc.sapphire)$env:COMPUTERNAME$($esc.Reset)" -NoNewline
   Get-GitStatus | Write-PromptGitStatus
   Write-PromptPath
-
-  if ($shExe -eq "pwsh") {
-    # multi-line prompt only in pwsh
-    Write-Host ""
-  }
-  
+  Write-Host ""
   return $promptText
 }
 
