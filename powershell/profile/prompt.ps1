@@ -123,9 +123,12 @@ $shDesc = getShDesc
 function Write-PromptPath {
   $path = $PWD.path
   $parent = $path | Split-Path -Parent
+  if ($parent -and -not ($parent -like "*`\")) {
+    $parent = "$parent`\"
+  }
   $leaf = $path | Split-Path -Leaf
 
-  Write-Host -NoNewline " $($esc.overlay2)$parent$($esc.reset)`\"
+  Write-Host -NoNewline " $($esc.overlay2)$parent$($esc.reset)"
   Write-Host -NoNewline "$($esc.pink)$leaf$($esc.reset)"
 }
 
