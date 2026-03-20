@@ -1,3 +1,4 @@
+# non-interactive ssh session
 $isSsh = [bool]($env:SSH_CONNECTION -or $env:SSH_CLIENT)
 $hasSshTty = [bool]($env:SSH_TTY)
 
@@ -15,6 +16,8 @@ Clear-Host
 $GitRoot = Get-GitRoot
 Set-Alias less "$GitRoot\usr\bin\less.exe"
 Set-Alias bash "$GitRoot\bin\bash.exe"
+Set-Alias -Name fd -Value "Invoke-FuzzySetLocation"
+Set-Alias -Name fkill -Value "Invoke-FuzzyKillProcess"
 
 # silent
 Set-PSReadLineOption -BellStyle None
