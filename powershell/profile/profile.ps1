@@ -18,6 +18,7 @@ Set-Alias bash "$GitRoot\bin\bash.exe"
 
 # silent
 Set-PSReadLineOption -BellStyle None
+Set-PSReadLineKeyHandler -Chord Tab -Function MenuComplete
 
 # fix weird directory colouring
 if ($PSStyle) {
