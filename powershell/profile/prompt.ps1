@@ -23,6 +23,7 @@ $chars = @{
   notTripEq = [char]0x2262;
   ex        = [char]0x00D7;
   gt        = [char]0xf105;
+  offline   = [char]0xf4ad;
 }
 
 $promptText = "$($chars.gt) "
@@ -37,7 +38,7 @@ function Write-PromptBranch {
   Write-Host "$($esc.lavender)$($gs.branch)$($esc.reset)" -NoNewline
 
   if (!$gs.Upstream) {
-    Write-Host " $($esc.maroon)_$($esc.reset)" -NoNewline
+    Write-Host " $($esc.lavender)$($chars.offline)$($esc.reset)" -NoNewline
     return
   }
 
@@ -70,6 +71,10 @@ function Write-PromptBranch {
 
 function Write-PromptCommitStatus {
   param([Parameter(ValueFromPipeline = $true)]$gs)
+
+  if ($gs.HasIndex -or $gs.working.Modified -or $gs.Working.Added) {
+    write-host -NoNewline " "
+  }
 
   if ($gs.HasIndex) {
     Write-Host -NoNewline "$($esc.sky)+$($esc.reset)"
