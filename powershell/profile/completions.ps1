@@ -32,7 +32,8 @@ $argc_scripts = @(
   "vite",
   "winget",
   "wsl",
-  "yq"
+  "yq",
+  "pnpm"
 )
 
 argc --argc-completions powershell $argc_scripts | Out-String | Invoke-Expression
