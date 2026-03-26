@@ -1,5 +1,6 @@
-function getPathParts {
-  (Get-Location).Path -split "\\"
+function getBackDirs {
+  $parentPath = (Get-Location).Path | Split-Path -Parent
+  $parentPath -split "\\" | Where-Object { $_.Length }
 }
 
 function bd {
@@ -12,20 +13,19 @@ function bd {
     return
   }
   
-  $pathParts = getPathParts
+  $backDirs = @(getBackDirs)
   
-  for ($i = $pathParts.Count - 1; $i -ge 0; $i--) {
-    if ($pathParts[$i] -like "*$Pattern*") {
-      $targetPath = [System.IO.Path]::Combine([string[]]$pathParts[0..$i])
-      if ($pathParts[0] -match '^[a-zA-Z]:$') {
+  for ($i = $backDirs.Count - 1; $i -ge 0; $i--) {
+    if ($backDirs[$i] -like "$Pattern*") {
+      $targetPath = [System.IO.Path]::Combine([string[]]$backDirs[0..$i])
+      if ($backDirs[0] -match '^[a-zA-Z]:$') {
         $targetPath = $targetPath + "\"
       }
       Set-Location $targetPath
       return
     }
   }
-  
-  Write-Host "No match found for pattern: $Pattern"
+  Write-Output "No match found for: $Pattern"
 }
 
 $s = {
@@ -37,8 +37,12 @@ $s = {
     $fakeBoundParameters
   )
 
-  $options = getPathParts  | Where-Object {
-    $_ -like "$wordToComplete*"
+  $options = @(getBackDirs | Where-Object {
+      $_ -like "$wordToComplete*"
+    })
+
+  if (-not $options.count) {
+    return "";
   }
 
   $options[($options.count - 1)..0]
