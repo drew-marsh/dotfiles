@@ -79,7 +79,7 @@ function Write-PromptCommitStatus {
   if ($gs.HasIndex) {
     Write-Host -NoNewline "$($esc.sky)+$($esc.reset)"
   }
-  if ($gs.Working.Modified) {
+  if ($gs.Working.Modified -or $gs.Working.Deleted) {
     Write-Host -NoNewline "$($esc.maroon)*$($esc.reset)"
   }
   if ($gs.Working.Added) {
