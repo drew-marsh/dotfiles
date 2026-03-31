@@ -13,6 +13,7 @@ Clear-Host
 . $PSScriptRoot\utils.ps1
 . $PSScriptRoot\prompt.ps1
 . $PSScriptRoot\bd.ps1
+. $PSScriptRoot\update.ps1
 
 $GitRoot = Get-GitRoot
 Set-Alias less "$GitRoot\usr\bin\less.exe"

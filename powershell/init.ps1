@@ -71,7 +71,7 @@ $catppuccinModule = Get-Module catppuccin -ListAvailable
 
 if (-not $catppuccinModule) {
   $moduleDir = $env:PSModulePath.Split(';')[0];
-  robocopy $PSScriptRoot\modules\catppuccin $moduleDir\Catppuccin /E | Out-Null
+  New-item -ItemType SymbolicLink -Path "$moduleDir\Catppuccin" -Target "$PSScriptRoot\modules\catppuccin" | Out-Null
 }
 
 $psReadLine = get-module PSReadLine
@@ -102,5 +102,16 @@ if (!(Test-Path $dir)) {
   md $dir | Out-Null
 }
 
-robocopy $PSScriptRoot\profile $dir /E | Out-Null
+ls $PSScriptRoot\profile | ForEach-Object {
+  $linkPath = "$dir\$($_.name)"
+  
+  if (Test-Path $linkPath) {
+    rm -r -force $linkPath
+  }
+
+  ni -ItemType SymbolicLink -Path $linkPath -Target "$($_.FullName)" -Force | Out-Null
+}
+
 mv -Force $dir\profile.ps1 $PROFILE
+
+Write-Output "Start a new shell to load"

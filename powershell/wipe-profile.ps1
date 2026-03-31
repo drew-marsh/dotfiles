@@ -1,1 +1,0 @@
-rm $PROFILE -ErrorAction SilentlyContinue
