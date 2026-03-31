@@ -11,7 +11,8 @@ $esc = @{
   sky      = $flavor.sky.foreground()
   blue     = $flavor.blue.foreground()
   Sapphire = $Flavor.sapphire.foreground()
-  Pink     = $Flavor.pink.foreground()
+  pink     = $Flavor.pink.foreground()
+  peach    = $Flavor.peach.foreground()
   overlay2 = $Flavor.Overlay2.Foreground()
   reset    = "$([char]0x1b)[0m"
 }
