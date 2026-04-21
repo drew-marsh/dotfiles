@@ -1,6 +1,11 @@
 function getBackDirs {
   $parentPath = (Get-Location).Path | Split-Path -Parent
-  $parentPath -split "\\" | Where-Object { $_.Length }
+  $parentPath -split "\\" | Where-Object { $_.Length } | ForEach-Object {
+    if ($_ -match '[a-zA-Z]:$') {
+      return "$_\"
+    }
+    return $_
+  }
 }
 
 function bd {
@@ -18,9 +23,6 @@ function bd {
   for ($i = $backDirs.Count - 1; $i -ge 0; $i--) {
     if ($backDirs[$i] -like "$Pattern*") {
       $targetPath = [System.IO.Path]::Combine([string[]]$backDirs[0..$i])
-      if ($backDirs[0] -match '^[a-zA-Z]:$') {
-        $targetPath = $targetPath + "\"
-      }
       Set-Location $targetPath
       return
     }
