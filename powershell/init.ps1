@@ -71,7 +71,7 @@ $catppuccinModule = Get-Module catppuccin -ListAvailable
 
 if (-not $catppuccinModule) {
   $moduleDir = $env:PSModulePath.Split(';')[0];
-  New-item -ItemType SymbolicLink -Path "$moduleDir\Catppuccin" -Target "$PSScriptRoot\modules\catppuccin" | Out-Null
+  cmd /c mklink /D "$moduleDir\Catppuccin" "$PSScriptRoot\modules\catppuccin" | Out-Null
 }
 
 $psReadLine = get-module PSReadLine
@@ -109,7 +109,12 @@ ls $PSScriptRoot\profile | ForEach-Object {
     rm -r -force $linkPath
   }
 
-  ni -ItemType SymbolicLink -Path $linkPath -Target "$($_.FullName)" -Force | Out-Null
+  if ($_.PSIsContainer) {
+    cmd /c mklink /D "$linkPath" "$($_.FullName)" | Out-Null
+  }
+  else {
+    cmd /c mklink "$linkPath" "$($_.FullName)" | Out-Null
+  }
 }
 
 mv -Force $dir\profile.ps1 $PROFILE
