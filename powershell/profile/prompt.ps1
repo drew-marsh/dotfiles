@@ -14,6 +14,7 @@ $esc = @{
   pink     = $Flavor.pink.foreground()
   peach    = $Flavor.peach.foreground()
   overlay2 = $Flavor.Overlay2.Foreground()
+  yellow   = $Flavor.Yellow.Foreground()
   reset    = "$([char]0x1b)[0m"
 }
 
@@ -29,6 +30,46 @@ $chars = @{
 
 $promptText = "$($chars.gt) "
 
+function Get-PackageManager {
+  <#
+    .SYNOPSIS
+    Determines whether we are currently in an npm project, pnpm project, or neither.
+    
+    .OUTPUTS
+    Returns 'npm', 'pnpm', or 'none'
+    #>
+    
+  if (Test-Path "pnpm-lock.yaml") {
+    return 'pnpm'
+  }
+  elseif (Test-Path "package-lock.json") {
+    return 'npm'
+  }
+  elseif (Test-Path "package.json") {
+    # Check if it's pnpm by looking for pnpm-lock.yaml in parent directories
+    $currentPath = (Get-Location).Path
+    while ($currentPath -ne (Split-Path $currentPath -Parent)) {
+      $currentPath = Split-Path $currentPath -Parent
+      if (Test-Path (Join-Path $currentPath "pnpm-lock.yaml")) {
+        return 'pnpm'
+      }
+    }
+    return 'npm'
+  }
+  else {
+    return 'none'
+  }
+}
+
+function Write-PromptPackageManager {
+  $packageManager = Get-PackageManager
+
+  if ($packageManager -eq 'none') {
+    return;
+  }
+
+  Write-Host " $($esc.yellow)$($packageManager)$($esc.reset)" -NoNewline
+}
 
 function Write-PromptBranch {
   param([Parameter(ValueFromPipeline = $true)]
@@ -141,6 +182,7 @@ function prompt {
   }
 
   Write-Host " $($esc.sapphire)$env:COMPUTERNAME$($esc.Reset)" -NoNewline
+  Write-PromptPackageManager
   Get-GitStatus | Write-PromptGitStatus
   Write-PromptPath
   Write-Host ""
@@ -148,3 +190,4 @@ function prompt {
 }
 
 Set-PSReadLineOption -PromptText $promptText
+
