@@ -83,7 +83,7 @@ if (!$psReadLine -or ($psReadLine.Version.Minor -lt 1)) {
 # download argc-completions tools
 $GitRoot = Get-GitRoot
 Set-Alias bash "$GitRoot\bin\bash.exe"
-bash $PSScriptRoot\profile\argc-completions\scripts\download-tools.sh | Out-Null
+bash $PSScriptRoot\profile\argc-completions\scripts\download-tools.sh
 
 # overwrite profile
 $profileExists = Test-Path $PROFILE

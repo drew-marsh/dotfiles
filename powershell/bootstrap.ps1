@@ -20,5 +20,5 @@ if (!$git) {
   git config --global push.autosetupremote true
 }
 
-git clone git@github.com:drew-marsh/dotfiles
+git clone https://github.com/drew-marsh/dotfiles
 . .\dotfiles\powershell\init.ps1
