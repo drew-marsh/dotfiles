@@ -38,3 +38,22 @@ function whichdir($command) {
   $ErrorActionPreference = 'SilentlyContinue'
   Get-Command $command | Select-Object -ExpandProperty Path | Split-Path
 }
+function vpn {
+  param(
+    [switch]$d,
+    [switch]$c,
+    [string]$Name
+  )
+
+  if ($d) {
+    rasdial /disconnect
+    return
+  }
+
+  if ($c -and $Name) {
+    rasphone -d $Name -f "$env:appdata\Microsoft\Network\Connections\Pbk\rasphone.pbk"
+    return
+  }
+
+  rasdial
+}
