@@ -33,7 +33,8 @@ $argc_scripts = @(
   "winget",
   "wsl",
   "yq",
-  "pnpm"
+  "pnpm",
+  "rg"
 )
 
 argc --argc-completions powershell $argc_scripts | Out-String | Invoke-Expression
