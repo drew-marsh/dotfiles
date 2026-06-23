@@ -1,3 +1,13 @@
+$isCodexShell = [bool](
+  $env:CODEX_THREAD_ID -or
+  $env:CODEX_MANAGED_BY_NPM -or
+  $env:CODEX_MANAGED_PACKAGE_ROOT
+)
+
+if ($isCodexShell) {
+  return;
+}
+
 # non-interactive ssh session
 $isSsh = [bool]($env:SSH_CONNECTION -or $env:SSH_CLIENT)
 $hasSshTty = [bool]($env:SSH_TTY)
