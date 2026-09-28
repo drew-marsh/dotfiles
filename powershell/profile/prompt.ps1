@@ -202,7 +202,7 @@ function prompt {
 
   Write-Host " $($esc.sapphire)$env:COMPUTERNAME$($esc.Reset)" -NoNewline
   Write-PromptPackageManager
-  Get-GitStatus | Write-PromptGitStatus
+  # Get-GitStatus | Write-PromptGitStatus
   Write-PromptPath
   Write-Host ""
   return $promptText
