@@ -24,12 +24,7 @@ Clear-Host
 . $PSScriptRoot\prompt.ps1
 . $PSScriptRoot\bd.ps1
 . $PSScriptRoot\update.ps1
-
-$GitRoot = Get-GitRoot
-Set-Alias less "$GitRoot\usr\bin\less.exe"
-Set-Alias bash "$GitRoot\bin\bash.exe"
-Set-Alias -Name fd -Value "Invoke-FuzzySetLocation"
-Set-Alias -Name fkill -Value "Invoke-FuzzyKillProcess"
+. $PSScriptroot\aliases.ps1
 
 # silent
 Set-PSReadLineOption -BellStyle None
