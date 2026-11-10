@@ -15,6 +15,7 @@ ${function:......} = { set-location ..\..\..\..\..\.. }
 ${function:~} = { set-location ~ }
 ${function:gs} = { git status @args }
 ${function:ga} = { git add @args }
+${function:glog} = { git log --graph --oneline @args }
 
 if (Get-Command curl.exe -ErrorAction SilentlyContinue | Test-Path) {
   rm alias:curl -ErrorAction SilentlyContinue
