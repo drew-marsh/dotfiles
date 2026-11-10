@@ -38,3 +38,7 @@ $argc_scripts = @(
 )
 
 argc --argc-completions powershell $argc_scripts | Out-String | Invoke-Expression
+
+if (Get-Command sbx) {
+  sbx completion powershell | out-string | invoke-expression
+}
