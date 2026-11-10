@@ -12,7 +12,7 @@ if ($isCodexShell) {
 $isSsh = [bool]($env:SSH_CONNECTION -or $env:SSH_CLIENT)
 $hasSshTty = [bool]($env:SSH_TTY)
 
-if ($isSsh -and -not $hasSshTty) {
+if ($isSsh -and -not $hasSshTty -and -not ($host.name -eq "ConsoleHost")) {
   return;
 }
 
